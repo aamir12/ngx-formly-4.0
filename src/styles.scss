@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'bootstrap/scss/bootstrap.scss';
+body { padding: 0px; margin: 0px; }
+
+
+.form-group {
+  margin-bottom: 0.6rem;
+}
+
+.custom-radio, .custom-checkbox {
+  display: flex;
+  gap: 10px;
+}

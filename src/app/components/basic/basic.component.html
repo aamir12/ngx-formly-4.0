@@ -1,0 +1,27 @@
+
+  <div class="row">
+    <div class="col-md-12 mb-4">
+      <h3>Basic</h3>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <formly-form
+          (modelChange)="onModelChange($event)"
+          [form]="form"
+          [model]="model"
+          [fields]="fields">
+        </formly-form>
+        <hr>
+        <div class="d-flex gap-2 justify-content-end">
+
+          <button class="btn btn-primary" type="submit">
+            Submit
+          </button>
+  
+          <button class="btn btn-danger" type="reset">
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {{ model | json }}

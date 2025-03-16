@@ -1,0 +1,22 @@
+<p>
+  Start editing to see some magic happen :)
+</p>
+
+<form role="form" novalidate [formGroup]="form">
+  <formly-form [fields]="fields" [model]="model" [form]="form" [options]="options">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </formly-form>
+</form>
+<button (click)="toggle()">Click me</button>
+
+{{model | json}}
+
+
+<form role="form" novalidate [formGroup]="form1">
+  <formly-form [fields]="fields1" [model]="model1" [form]="form1" [options]="options1">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </formly-form>
+</form>
+
+
+{{model1| json}}
