@@ -8,7 +8,7 @@ formly-form
     => Wrapper HTML
     => formly-field-input
 
-
+```json
 {
       key: 'input', //textarea,checkbox,select,radio,multichecbox,datepicker
       type: 'input',
@@ -31,4 +31,4 @@ formly-form
       formControl,
       modelOptions,
 },
-
+```
