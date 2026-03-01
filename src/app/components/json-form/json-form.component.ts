@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { FormlyFormOptions, FormlyFieldConfig, FormlyTemplateOptions } from '@ngx-formly/core';
 import { UserService } from './user.service';
 import { IpValidator } from 'src/app/app.module';
-import { startWith, switchMap } from 'rxjs/operators';
+import { startWith, switchMap, tap } from 'rxjs/operators';
 import { FormlyHookFn, FormlyLifeCycleOptions } from '@ngx-formly/core/lib/components/formly.field.config';
 
 
@@ -38,7 +38,7 @@ export class JsonFormComponent {
    */
   mapFields(fields: FormlyFieldConfig[]) {
     return fields.map(f => {
-      // Bind an observable to `color` field.
+      // Bind options from API
       if (f.key === 'color') {
         (f.templateOptions as FormlyTemplateOptions).options = this.userService.getColors();
       }
@@ -47,12 +47,14 @@ export class JsonFormComponent {
         (f.templateOptions as FormlyTemplateOptions).options = this.userService.getCompanies();
       }
 
+      //Add client side logical function
       if (f.key === 'ip') {
         f.validators = {
           validation: [IpValidator]
         }
       }
 
+      //Dependent value
       if (f.key === 'itemId') {
         f.hooks = {
           onInit: (field: FormlyFieldConfig) => {
@@ -60,17 +62,18 @@ export class JsonFormComponent {
 
             const companyControl = field.form.get('companyId');
             if (!companyControl) return;
+
             (field.templateOptions as FormlyTemplateOptions).options = companyControl
               .valueChanges.pipe(
-                startWith(this.model.companyId),
-                switchMap((companyId: string | null) => {
-                  // console.log(this.model);
-                  this.model = {
-                    ...this.model,
-                    itemId: null
-                  };
-                  // (field.form as FormGroup).get('itemId')?.setValue(null);
-                  return this.userService.getCompanyItems(companyId ?? '')})
+                startWith(companyControl.value),
+                switchMap(
+                  (companyId: string | null) => this.userService.getCompanyItems(companyId ?? '')),
+                tap(options => {
+                  const itemIdControl = (field.formControl as FormControl);
+                  if (!options.find(option => option.id === itemIdControl.value)) {
+                    itemIdControl.setValue(null);
+                  }
+                })
               );
           } 
         } as FormlyLifeCycleOptions<FormlyHookFn>
