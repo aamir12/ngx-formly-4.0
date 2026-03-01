@@ -54,11 +54,11 @@
     },
     "fieldGroup": [
       {
-        "key": "password (validation defined at client)",
+        "key": "password",
         "type": "input",
         "templateOptions": {
           "type": "password",
-          "label": "Password",
+          "label": "Password (Client side Validation Function writtern)",
           "placeholder": "Must be at least 3 characters",
           "required": true,
           "minLength": 3
