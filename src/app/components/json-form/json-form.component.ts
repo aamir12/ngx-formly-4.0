@@ -40,6 +40,10 @@ export class JsonFormComponent {
         (f.templateOptions as FormlyTemplateOptions).options = this.userService.getColors();
       }
 
+      if (f.key === 'companyId') {
+        (f.templateOptions as FormlyTemplateOptions).options = this.userService.getCompanies();
+      }
+
       if (f.key === 'ip') {
         f.validators = {
           validation: [IpValidator]

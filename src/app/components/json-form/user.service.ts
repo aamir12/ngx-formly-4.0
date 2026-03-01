@@ -24,4 +24,8 @@ export class UserService {
   getColors() {
     return this.http.get<{ label: string; value: string }[]>('assets/json-powered/colors.json');
   }
+
+  getCompanies() {
+    return this.http.get<{ label: string; value: string }[]>('assets/json-powered/companies.json');
+  }
 }

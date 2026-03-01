@@ -58,7 +58,7 @@
         "type": "input",
         "templateOptions": {
           "type": "password",
-          "label": "Password (Client side Validation Function writtern)",
+          "label": "Password",
           "placeholder": "Must be at least 3 characters",
           "required": true,
           "minLength": 3
@@ -110,5 +110,20 @@
       { "label": "Option 3", "value": "3" }
     ]
   }
- }
+ },
+ {
+  "key": "companyId",
+  "type": "select",
+  "templateOptions": {
+    "label": "Company",
+    "valueProp": "id",
+    "labelProp": "name",
+    "required": true
+  },
+  "validation": {
+    "messages": {
+      "required": "Please select the company this resource is being used for."
+    }
+  }
+}
 ]
