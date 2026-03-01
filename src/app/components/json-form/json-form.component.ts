@@ -14,12 +14,13 @@ export class JsonFormComponent {
   options: FormlyFormOptions = {};
   model: any;
   fields!: FormlyFieldConfig[];
-
+  isFormConfigLoaded = false;
   constructor(private userService: UserService) {
     this.userService.getUserData().subscribe(([model, fields]) => {
       this.form = new FormGroup({});
       this.model = model;
       this.fields = this.mapFields(fields);
+      this.isFormConfigLoaded = true;
     });
   }
 
@@ -44,7 +45,6 @@ export class JsonFormComponent {
           validation: [IpValidator]
         }
       }
-
       return f;
     });
   }
