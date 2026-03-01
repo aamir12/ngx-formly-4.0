@@ -1,0 +1,114 @@
+[
+  {
+    "key": "firstName",
+    "type": "input",
+    "templateOptions": {
+      "label": "First Name",
+      "required": true
+    }
+  },
+  {
+    "key": "lastName",
+    "type": "input",
+    "templateOptions": {
+      "label": "Last Name",
+      "required": true
+    }
+  },
+  {
+    "key": "mac",
+    "type": "input",
+    "templateOptions": {
+      "label": "Mac Address",
+      "pattern": "([0-9A-F]{2}[:-]){5}([0-9A-F]{2})"
+    }
+  },
+  {
+    "key": "color",
+    "type": "radio",
+    "templateOptions": {
+      "label": "Color Preference (Options bind at client) "
+    }
+  },
+  {
+    "key": "reason",
+    "type": "textarea",
+    "templateOptions": {
+      "label": "Why?"
+    },
+    "expressionProperties": {
+      "templateOptions.label": "'Why did you choose ' + model.color + '?'"
+    },
+    "hideExpression": "!model.color"
+  },
+  {
+    "validators": {
+      "validation": [
+        {
+          "name": "fieldMatch",
+          "options": {
+            "errorPath": "passwordConfirm"
+          }
+        }
+      ]
+    },
+    "fieldGroup": [
+      {
+        "key": "password (validation defined at client)",
+        "type": "input",
+        "templateOptions": {
+          "type": "password",
+          "label": "Password",
+          "placeholder": "Must be at least 3 characters",
+          "required": true,
+          "minLength": 3
+        }
+      },
+      {
+        "key": "passwordConfirm",
+        "type": "input",
+        "templateOptions": {
+          "type": "password",
+          "label": "Confirm Password",
+          "placeholder": "Please re-enter your password",
+          "required": true
+        }
+      }
+    ]
+  },
+  {
+    "key": "ip",
+    "type": "input",
+    "templateOptions": {
+      "label": "IP Address (Validation binding)",
+      "required": true,
+      "placeholder": "127.0.0.1"
+    }
+  },
+  {
+    "key": "checkbox",
+    "type": "checkbox",
+    "templateOptions": {
+      "label": "Checkbox"
+    }
+  },
+  {
+  "key": "select",
+  "type": "select",
+  "expressionProperties": {
+    "templateOptions.disabled": "!model.checkbox",
+    "templateOptions.required": "model.checkbox",
+    "model.select": "!model.checkbox ? null : model.select"
+  },
+  "templateOptions": {
+    "label": "Select",
+    "placeholder": "Select placeholder",
+    "required": true,
+    "options": [
+      { "label": "Option 1", "value": "1" },
+      { "label": "Option 2", "value": "2" },
+      { "label": "Option 3", "value": "3" }
+    ]
+  }
+ }
+]

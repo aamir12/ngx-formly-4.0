@@ -11,6 +11,8 @@ import { MenuComponent } from './core/menu/menu.component';
 import { ValidationComponent } from './components/validation/validation.component';
 import { FormExpressionComponent } from './components/form-expression/form-expression.component';
 import { FormLayoutComponent } from './components/form-layout/form-layout.component';
+import { JsonFormComponent } from './components/json-form/json-form.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 export function IpValidator(control: AbstractControl): ValidationErrors | null {
@@ -47,7 +49,8 @@ export function fieldMatchValidator(control: AbstractControl) {
     MenuComponent,
     ValidationComponent,
     FormExpressionComponent,
-    FormLayoutComponent
+    FormLayoutComponent,
+    JsonFormComponent
   ],
   imports: [
     BrowserModule,
@@ -74,6 +77,7 @@ export function fieldMatchValidator(control: AbstractControl) {
         }
       ]
     }),
+    HttpClientModule,
     AppRoutingModule
   ],
   providers: [],
