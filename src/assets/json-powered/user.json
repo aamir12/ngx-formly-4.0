@@ -1,4 +1,8 @@
 {
   "firstName": "Joan",
-  "lastName": "of Arc"
+  "lastName": "of Arc",
+  "mac": "00:1A:2B:3C:4D:5E",
+  "password": "1234",
+  "passwordConfirm": "1234",
+  "ip": "127.0.0.0.1"
 }

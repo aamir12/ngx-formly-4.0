@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { FormlyFieldConfig } from '@ngx-formly/core';
 
 @Injectable({
@@ -27,5 +27,43 @@ export class UserService {
 
   getCompanies() {
     return this.http.get<{ label: string; value: string }[]>('assets/json-powered/companies.json');
+  }
+
+  getCompanyItems(companyId: string) {
+    const items = [
+      {
+        id:'1',
+        name: 'item1',
+        companyId: '1'
+      },
+      {
+        id:'2',
+        name: 'item2',
+        companyId: '1'
+      },
+      {
+        id:'3',
+        name: 'item3',
+        companyId: '2'
+      },
+      {
+        id:'4',
+        name: 'item4',
+        companyId: '2'
+      },
+      {
+        id:'5',
+        name: 'item5',
+        companyId: '3'
+      },
+      {
+        id:'6',
+        name: 'item6',
+        companyId: '3'
+      },
+    ];
+
+    const companyItems = items.filter(item => item.companyId === companyId);
+    return of(companyItems);
   }
 }
