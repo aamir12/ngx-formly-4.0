@@ -1,0 +1,60 @@
+<div class="form-group mb-3" [class.has-error]="showError">
+  <!-- 1. Header: Label, Asterisk, Tooltip -->
+  <div class="d-flex justify-content-between align-items-center mb-1" *ngIf="to.label">
+    <label [for]="id" class="form-label mb-0 fw-semibold">
+      {{ to.label }}
+      <span *ngIf="to.required" class="text-danger">*</span>
+    </label>
+
+    <span *ngIf="to['tooltip']" class="text-muted ms-1 cursor-pointer" [tooltip]="to['tooltip']" placement="top"
+      tabindex="0">
+      <i class="bi bi-info-circle"></i>
+    </span>
+  </div>
+
+  <!-- 2. Input Container -->
+  <div class="input-group" [class.is-invalid]="showError">
+    <!-- Prefix Icon -->
+    <span class="input-group-text" *ngIf="to['prefixIcon']">
+      <i [class]="to['prefixIcon']"></i>
+    </span>
+
+    <span class="input-group-text" *ngIf="to['prefixText']">
+      {{ to['prefixText'] }}
+    </span>
+
+    <!-- Field Component Portal -->
+    <ng-container #fieldComponent></ng-container>
+
+    <!-- Seamless Clear Button -->
+    <button *ngIf="to['allowClear'] && formControl?.value" type="button" class="btn btn-clear" (click)="onClear()"
+      aria-label="Clear value">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <!-- Suffix Icon Button -->
+    <button *ngIf="to['suffixIcon'] && to['onAddonClick']" type="button" class="btn btn-clear" (click)="onAddonClick()">
+      <i [class]="to['suffixIcon']"></i>
+    </button>
+
+    <span class="input-group-text" *ngIf="to['suffixText']">
+      {{ to['suffixText'] }}
+    </span>
+  </div>
+
+  <!-- 3. Helper Text & Counter -->
+  <div class="d-flex justify-content-between align-items-center mt-1">
+    <small class="form-text text-muted" *ngIf="to.description && !showError">
+      {{ to.description }}
+    </small>
+
+    <small class="text-muted ms-auto" *ngIf="to.maxLength">
+      {{ currentLength }} / {{ to.maxLength }}
+    </small>
+  </div>
+
+  <!-- 4. Error Message -->
+  <div class="invalid-feedback d-block" *ngIf="showError">
+    <formly-validation-message [field]="field"></formly-validation-message>
+  </div>
+</div>

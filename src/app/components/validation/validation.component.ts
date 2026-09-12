@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { IpValidator } from 'src/app/app.module';
 
@@ -34,6 +34,7 @@ export class ValidationComponent {
   form1 = new FormGroup({});
   model1 = {
     ip: '',
+    ip1: '',
   };
 
   fields1: FormlyFieldConfig[] = [
@@ -52,8 +53,30 @@ export class ValidationComponent {
       //   validation: [IpAsyncValidator],
       // },
     },
+    {
+      key: 'ip1',
+      type: 'input',
+      templateOptions: {
+        label:
+          'IP Address (using custom validation through `validators.expression` property)',
+        description: 'custom validation message through `validators` property',
+        required: true,
+      },
+      modelOptions: {
+        updateOn: 'blur',
+      },
+      validators: {
+        ip: {
+          expression: (c: AbstractControl) => {
+            // const parentForm = c.parent as FormGroup;
+            return !c.value || /(\d{1,3}\.){3}\d{1,3}/.test(c.value);
+          },
+          message: (error: unknown, field: FormlyFieldConfig) =>
+            `"${field.formControl?.value}" is not a valid IP Address`,
+        },
+      },
+    },
   ];
-
 
   /*********/
   form2 = new FormGroup({});
@@ -69,16 +92,16 @@ export class ValidationComponent {
         label: 'IP Address (using custom validation declared in ngModule)',
         required: true,
         placeholder: '127.0.0.1',
-      }
+      },
     },
   ];
 
   onModelChange(model: any) {
-    console.log('onModelChange', model);
+    // console.log('onModelChange', model);
   }
 
   onSubmit() {
-    console.log(this.model);
+    // console.log(this.model);
   }
 
   /********/
@@ -87,36 +110,38 @@ export class ValidationComponent {
   model3: any = {};
   options3: FormlyFormOptions = {};
 
-  fields3: FormlyFieldConfig[] = [{
-    validators: {
-      validation: [
-        { name: 'fieldMatch', options: { errorPath: 'passwordConfirm' } },
+  fields3: FormlyFieldConfig[] = [
+    {
+      validators: {
+        validation: [
+          { name: 'fieldMatch', options: { errorPath: 'passwordConfirm' } },
+        ],
+      },
+      fieldGroup: [
+        {
+          key: 'password',
+          type: 'input',
+          templateOptions: {
+            type: 'password',
+            label: 'Password',
+            placeholder: 'Must be at least 3 characters',
+            required: true,
+            minLength: 3,
+          },
+        },
+        {
+          key: 'passwordConfirm',
+          type: 'input',
+          templateOptions: {
+            type: 'password',
+            label: 'Confirm Password',
+            placeholder: 'Please re-enter your password',
+            required: true,
+          },
+        },
       ],
     },
-    fieldGroup: [
-      {
-        key: 'password',
-        type: 'input',
-        templateOptions: {
-          type: 'password',
-          label: 'Password',
-          placeholder: 'Must be at least 3 characters',
-          required: true,
-          minLength: 3,
-        },
-      },
-      {
-        key: 'passwordConfirm',
-        type: 'input',
-        templateOptions: {
-          type: 'password',
-          label: 'Confirm Password',
-          placeholder: 'Please re-enter your password',
-          required: true,
-        },
-      },
-    ],
-  }];
+  ];
 
   submit() {
     if (this.form.valid) {

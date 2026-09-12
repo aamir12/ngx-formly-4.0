@@ -3,6 +3,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyValueChangeEvent } from '@ngx-formly/core/lib/components/formly.field.config';
 import { debounceTime, filter, Subject, take } from 'rxjs';
+import { uniqueUsernameValidator } from 'src/app/app.module';
 /* 
 <form>
   <formly-form>
@@ -25,7 +26,7 @@ import { debounceTime, filter, Subject, take } from 'rxjs';
 interface FormData {
   input: string;
   textarea: string;
-  checkbox:boolean;
+  checkbox: boolean;
   select: string;
   radio: string;
   key_a: string;
@@ -37,7 +38,7 @@ interface FormData {
 @Component({
   selector: 'app-basic',
   templateUrl: './basic.component.html',
-  styleUrls: ['./basic.component.scss']
+  styleUrls: ['./basic.component.scss'],
 })
 export class BasicComponent {
   form = new FormGroup({});
@@ -49,13 +50,69 @@ export class BasicComponent {
   };
   fields: FormlyFieldConfig[] = [
     {
+      key: 'username',
+      type: 'input',
+      wrappers: ['advanced-field'],
+      templateOptions: {
+        label: 'Username',
+        placeholder: 'e.g. jdoe_dev',
+        required: true,
+        minLength: 4,
+        maxLength: 15,
+        prefixIcon: 'bi bi-person',
+        allowClear: true,
+        tooltip: 'Pick a unique username for your handle.',
+        description: 'Between 4 and 15 characters.',
+      },
+    },
+    {
+      key: 'username1',
+      type: 'advanced-input',
+      templateOptions: {
+        label: 'Username1',
+        placeholder: 'Enter unique username',
+        required: true,
+        clearable: true,
+        prefixIcon: 'bi bi-person',
+        showCharCount: true,
+        maxLength: 20,
+        tooltipText: 'Must be unique. Try "admin" to trigger async validation.',
+        popoverTitle: 'Username Rules',
+        popoverContent: 'No special characters allowed. Minimum 3 characters.',
+        description: 'Used for system authentication.',
+      },
+      asyncValidators: {
+        validation: ['uniqueUsername'],
+      },
+      validators: {
+        validation: ['noSpecialChars'],
+      },
+    },
+    {
       key: 'input',
       type: 'input',
-      className: 'customInput', //formly-field 
+      className: 'customInput', //formly-field
       templateOptions: {
         label: 'Input',
         placeholder: 'Input placeholder',
         required: true,
+      },
+    },
+    {
+      key: 'numberInput',
+      type: 'input',
+      templateOptions: {
+        label: 'Input Number Only',
+        placeholder: 'Input placeholder',
+        required: true,
+        pattern: '^[0-9]*$',
+      },
+      validation: {
+        messages: { pattern: 'Invalid Number' },
+      },
+      expressionProperties: {
+        'templateOptions.pattern': (model: FormData) =>
+          model.checkbox ? '^[0-9]*$' : null,
       },
     },
     {
@@ -79,7 +136,7 @@ export class BasicComponent {
     {
       key: 'select',
       type: 'select',
-      focus:true,
+      focus: true,
       // Hide input by expression or callback fn
       // hideExpression: '!model.checkbox',
       // hideExpression: function (model: FormData) {
@@ -139,8 +196,8 @@ export class BasicComponent {
       },
     },
     {
-      fieldGroupClassName:"row", //<formly-group>
-      hideExpression: "!model.radio",
+      fieldGroupClassName: 'row', //<formly-group>
+      hideExpression: '!model.radio',
       fieldGroup: [
         {
           key: 'key_a',
@@ -148,7 +205,7 @@ export class BasicComponent {
           type: 'input',
           templateOptions: {
             label: 'Key A',
-          }
+          },
         },
         {
           key: 'key_b',
@@ -156,7 +213,7 @@ export class BasicComponent {
           type: 'input',
           templateOptions: {
             label: 'Key B',
-          }
+          },
         },
         {
           key: 'key_c',
@@ -164,20 +221,26 @@ export class BasicComponent {
           type: 'input',
           templateOptions: {
             label: 'Key C',
-          }
-        }
-      ] 
-    }
+          },
+        },
+      ],
+    },
   ];
 
   //below is optional
   fieldChange = new Subject<FormlyValueChangeEvent>();
   options: FormlyFormOptions = {
     fieldChanges: this.fieldChange,
-  }
+  };
 
   onModelChange(event: FormData) {
     console.log(event);
+  }
+
+  changeName(): void {
+    // only change model value will not update the form control value, so we need to set the value of the form control as well
+    this.model.input = 'khan';
+    (this.form.get('input') as AbstractControl)?.setValue('khan');
   }
 
   onSubmit() {
@@ -188,22 +251,19 @@ export class BasicComponent {
 
   // optional for basic
   ngOnInit() {
-    this.fieldChange!
-      .pipe(
-        filter(
-          (event) =>
-            event.field.key === 'key_a' && this.form.get('key_a') != null
-        ),
-        debounceTime(300),
-        take(1)
-      )
-      .subscribe(() => {
-        this.form
-        .get('key_a')
-        ?.valueChanges.subscribe((value) => {
-          this.fakeBackend(value);
-        });
+    this.fieldChange!.pipe(
+      filter(
+        (event) =>
+          event.field.key === 'key_a' && this.form.get('key_a') != null,
+      ),
+      debounceTime(300),
+      take(1),
+    ).subscribe(() => {
+      console.log('fieldChange');
+      this.form.get('key_a')?.valueChanges.subscribe((value) => {
+        this.fakeBackend(value);
       });
+    });
   }
 
   fakeBackend(val: string) {

@@ -1,0 +1,56 @@
+:host {
+  display: block;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.input-group {
+  /* 1. Make any custom Angular component inserted by Formly flex to fill space */
+  > formly-field-input,
+  > formly-field-select,
+  > formly-field-textarea,
+  > [ng-reflect-field] {
+    flex: 1 1 auto;
+    width: 1%;
+    display: flex;
+
+    /* Ensure the real input inside takes full height/width and joins the group */
+    .form-control,
+    .form-select {
+      width: 100%;
+      border-radius: 0; // Strip middle border-radius
+    }
+  }
+
+  /* 2. Fix the prefix border radius if an icon is present */
+  > .input-group-text:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  /* 3. Seamless Clear / Suffix button styling */
+  .btn-clear {
+    border-color: #ced4da;
+    border-left: none; // Avoid double border with the input
+    background-color: #fff;
+    color: #6c757d;
+
+    &:hover {
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+
+    &:focus {
+      box-shadow: none;
+      border-color: #86b7fe;
+    }
+  }
+}
+
+.has-error {
+  .form-label {
+    color: #dc3545;
+  }
+}
