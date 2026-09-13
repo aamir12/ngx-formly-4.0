@@ -9,6 +9,7 @@ import {
   ReactiveFormsModule,
   ValidationErrors,
 } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormlyBootstrapModule } from '@ngx-formly/bootstrap';
 import { FormlyFieldConfig, FormlyModule } from '@ngx-formly/core';
 import { BasicComponent } from './components/basic/basic.component';
@@ -21,8 +22,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { AdvanceWrapperComponent } from './components/advance-wrapper/advance-wrapper.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { CustomInputComponent } from './components/custom-input/custom-input.component';
 import { Observable, of, switchMap, timer } from 'rxjs';
+import { DateInputComponent } from './components/custom-input/date-input.component';
+import { ArrayTypeComponent } from './components/array-type/array-type.component';
 
 export function IpValidator(control: AbstractControl): ValidationErrors | null {
   return !control.value || /(\d{1,3}\.){3}\d{1,3}/.test(control.value)
@@ -135,6 +139,8 @@ export function registerAsyncValidatorsExtension(field: FormlyFieldConfig) {
     JsonFormComponent,
     AdvanceWrapperComponent,
     CustomInputComponent,
+    DateInputComponent,
+    ArrayTypeComponent,
   ],
   imports: [
     BrowserModule,
@@ -167,6 +173,14 @@ export function registerAsyncValidatorsExtension(field: FormlyFieldConfig) {
           message: specialCharactersValidationMessage,
         },
         { name: 'usernameTaken', message: usernameTakenValidationMessage },
+        {
+          name: 'duplicateInArray',
+          message: 'This email is already added in the list above.',
+        },
+        {
+          name: 'serverEmailTaken',
+          message: 'This email is already registered in our system.',
+        },
       ],
       types: [
         {
@@ -182,12 +196,19 @@ export function registerAsyncValidatorsExtension(field: FormlyFieldConfig) {
           name: 'advanced-input',
           component: CustomInputComponent,
         },
+        {
+          name: 'advanced-date-input',
+          component: DateInputComponent,
+        },
+        { name: 'array', component: ArrayTypeComponent },
       ],
     }),
     HttpClientModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     TooltipModule.forRoot(),
     PopoverModule.forRoot(),
+    BsDatepickerModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

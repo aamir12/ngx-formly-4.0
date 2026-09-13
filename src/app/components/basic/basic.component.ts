@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { FormlyFieldConfig, FormlyFormOptions } from '@ngx-formly/core';
 import { FormlyValueChangeEvent } from '@ngx-formly/core/lib/components/formly.field.config';
 import { debounceTime, filter, Subject, take } from 'rxjs';
-import { uniqueUsernameValidator } from 'src/app/app.module';
+import {
+  uniqueInSimpleArrayValidator,
+  uniqueServerEmailValidator,
+  UserService,
+} from 'src/app/user.service';
 /* 
 <form>
   <formly-form>
@@ -33,6 +37,7 @@ interface FormData {
   key_b: string;
   key_c: string;
   multichecbox: string[];
+  investments: string[];
 }
 
 @Component({
@@ -42,11 +47,13 @@ interface FormData {
 })
 export class BasicComponent {
   form = new FormGroup({});
+  userService = inject(UserService);
   model: Partial<FormData> = {
     input: 'aamir',
     key_a: '',
     key_b: '',
     key_c: '',
+    investments: ['admin@test.com', 'amir.khan@db.com'],
   };
   fields: FormlyFieldConfig[] = [
     {
@@ -86,6 +93,18 @@ export class BasicComponent {
       },
       validators: {
         validation: ['noSpecialChars'],
+      },
+      modelOptions: {
+        updateOn: 'blur',
+      },
+    },
+    {
+      key: 'date1',
+      type: 'advanced-date-input',
+      templateOptions: {
+        label: 'Date',
+        placeholder: 'Enter Date',
+        required: true,
       },
     },
     {
@@ -224,6 +243,48 @@ export class BasicComponent {
           },
         },
       ],
+    },
+    {
+      key: 'investments',
+      type: 'array',
+      fieldArray: {
+        type: 'input',
+        key: 'investmentName',
+        templateOptions: {
+          label: 'Name of Investment:',
+          required: true,
+        },
+        modelOptions: {
+          updateOn: 'blur',
+        },
+        validators: {
+          validation: [uniqueInSimpleArrayValidator],
+        },
+        asyncValidators: {
+          validation: [uniqueServerEmailValidator(this.userService)],
+        },
+        hooks: {
+          onInit: (field) => {
+            // Sibling sync: when this value changes/clears, revalidate other controls
+            field?.formControl?.valueChanges.subscribe(() => {
+              const parent = field.formControl?.parent as FormArray;
+              if (parent && parent.controls) {
+                parent.controls.forEach((siblingCtrl) => {
+                  if (siblingCtrl !== field.formControl) {
+                    siblingCtrl.updateValueAndValidity({
+                      onlySelf: true,
+                      emitEvent: false,
+                    });
+                  }
+                });
+              }
+            });
+          },
+        },
+      },
+      templateOptions: {
+        max: 3,
+      },
     },
   ];
 
