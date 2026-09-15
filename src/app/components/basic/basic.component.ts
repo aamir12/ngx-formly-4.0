@@ -70,6 +70,11 @@ export class BasicComponent {
         allowClear: true,
         tooltip: 'Pick a unique username for your handle.',
         description: 'Between 4 and 15 characters.',
+        onAddonClick: (field: FormlyFieldConfig) => {
+          console.log(field.parent);
+          console.log(this.model);
+        },
+        suffixIcon: 'bi bi-info-circle',
       },
     },
     {
